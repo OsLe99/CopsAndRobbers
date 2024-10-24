@@ -20,21 +20,23 @@
             //    }
             //}
             //Console.ReadLine();
-
-            City City = new City(12, 12, 12, 20, 50);
+            Console.CursorVisible = false;
+            City City = new City(12, 12, 12, 25, 100);
             City.DisplayLocation();
+
+            
             
             while (true)
             {
 
                 for (int i = 0; i < City.Peoples.Count; i++)
                 {
-                    Helpers.Movement2(i, City);
+                    Render.Movement(i, City);
                     City.DisplayPeople(i);
 
                 }
 
-                Console.ReadKey(true);
+                Thread.Sleep(200);            
             }
         }
     }

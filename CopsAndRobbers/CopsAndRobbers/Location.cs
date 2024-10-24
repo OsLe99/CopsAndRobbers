@@ -88,7 +88,7 @@ namespace CopsAndRobbers
 
                     if (col == 0 || col == Height || row == 0 || row == Width)
                     {
-                        Console.Write("X");
+                        Console.Write("░");
                     }
                     else
                     {
