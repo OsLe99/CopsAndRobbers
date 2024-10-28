@@ -28,12 +28,12 @@
             
             while (true)
             {
+                Render.NewsBulletin();
 
                 for (int i = 0; i < City.Peoples.Count; i++)
                 {
                     Render.Movement(i, City);
                     City.DisplayPeople(i);
-
                 }
 
                 Thread.Sleep(200);            

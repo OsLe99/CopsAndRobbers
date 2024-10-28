@@ -11,7 +11,7 @@ namespace CopsAndRobbers
         public int Height { get; set; }
         public int Width { get; set; }
         public List<string> News { get; set; }
-        public List<Robber> Prisoners { get; set; }
+        public List<People> Prisoners { get; set; }
         public List<People> Peoples { get; set; }
         
         public int?[,] CityGrid { get; set; }
@@ -22,6 +22,7 @@ namespace CopsAndRobbers
             Width = width;
             CityGrid = new int?[width, height];
             Peoples = new List<People>();
+            Prisoners = new List<People>();
             //DisplayLocation();
         }
 
@@ -48,32 +49,45 @@ namespace CopsAndRobbers
                 Console.ForegroundColor= ConsoleColor.White;
            // }
         }
-        //public void Movement(int currentPerson)
-        //{
-        //    Random rnd = new Random();
 
-        //    if (Peoples[currentPerson].PosX + Peoples[currentPerson].DirX == 0 || Peoples[currentPerson].PosX + Peoples[currentPerson].DirX == Width ||
-        //        Peoples[currentPerson].PosY + Peoples[currentPerson].DirY == 0 || Peoples[currentPerson].PosY + Peoples[currentPerson].DirY == Height ||
-        //        (Peoples[currentPerson].DirX == 0 && Peoples[currentPerson].DirY == 0))
-        //    {
-        //        Peoples[currentPerson].DirX = rnd.Next(-1, 2);
-        //        Peoples[currentPerson].DirY = rnd.Next(-1, 2);
-        //    }
-        //    else
-        //    {
-        //        Console.SetCursorPosition(Peoples[currentPerson].PosX, Peoples[currentPerson].PosY);
-        //        Console.Write(" ");
-        //        CityGrid[Peoples[currentPerson].PosX, Peoples[currentPerson].PosY] = null;
-        //        Peoples[currentPerson].PosY += Peoples[currentPerson].DirY;
-        //        Peoples[currentPerson].PosX += Peoples[currentPerson].DirX;
-        //        CityGrid[Peoples[currentPerson].PosX, Peoples[currentPerson].PosY] = currentPerson;
-        //    }
-
-        //}
-
-        public void Interaction()
+        public void Interaction(int currentPerson)
         {
+            foreach (var people in Peoples)
+            {
+                if ((people.PosX == Peoples[currentPerson].PosX && people.PosY == Peoples[currentPerson].PosY) && people != Peoples[currentPerson])
+                {
+                    if (Peoples[currentPerson] is Citizen && people is Robber)
+                    {
+                        people.Goods.Add(Peoples[currentPerson].Goods.Last());
+                        Peoples[currentPerson].Goods.Remove(Peoples[currentPerson].Goods.Last());
+                    }
+                    else if (Peoples[currentPerson] is Robber && people is Citizen)
+                    {
+                        Peoples[currentPerson].Goods.Add(people.Goods.Last());
+                        people.Goods.Remove(people.Goods.Last());
+                    }
+                    else if (Peoples[currentPerson] is Cop && people is Robber && people.Goods.Count() > 0)
+                    {
+                        people.Goods.AddRange(Peoples[currentPerson].Goods);
+                        Peoples[currentPerson].Goods.RemoveRange(0, Peoples[currentPerson].Goods.Count());
 
+                        Prisoners.Add(people);
+                        Peoples.Remove(people);
+                    }
+                    else if (Peoples[currentPerson] is Robber && people is Cop && Peoples[currentPerson].Goods.Count() > 0)
+                    {
+                        Peoples[currentPerson].Goods.AddRange(people.Goods);
+                        people.Goods.RemoveRange(0, people.Goods.Count());
+
+                        Prisoners.Add(Peoples[currentPerson]);
+                        Peoples.Remove(Peoples[currentPerson]);
+                    }
+                    else
+                    {
+                        //News.Add($"{Peoples[currentPerson]} hälsar på {people}");
+                    }
+                }
+            }
         }
 
         

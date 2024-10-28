@@ -17,6 +17,7 @@ namespace CopsAndRobbers
 
         public People(string name, int posX, int posY, int dirX, int dirY)
         {
+            Goods = new List<Goods>();
             Name = name; 
             PosX = posX;
             PosY = posY; 
@@ -29,7 +30,6 @@ namespace CopsAndRobbers
     {
         public Citizen(string name, int posX, int posY, int dirX, int dirY) : base(name, posX, posY, dirX, dirY)   
         {
-            Goods = new List<Goods>();
             CreateGoods(Goods);
         }
 
