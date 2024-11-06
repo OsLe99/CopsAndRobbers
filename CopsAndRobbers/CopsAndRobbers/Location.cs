@@ -14,7 +14,7 @@ namespace CopsAndRobbers
         public int Width { get; set; }
         public List<string> News { get; set; }
         public bool NewNews { get; set; }
-
+        public List<int> Prison { get; set; }
         public List<People> Peoples { get; set; }
         
         public Dictionary<(int, int), List<int>> CityGrid { get; set; }
@@ -33,13 +33,15 @@ namespace CopsAndRobbers
     class City: Location
     {
         public int AmmountOfCitizen { get; }
-        public int AmmountOfTheifs { get; }
+        public int AmmountOfThiefs { get; }
         public int AmmountOfCops { get; }
         
-        public City(int ammountOfCitizen, int ammountOfTheifs, int ammountOfCops, int height, int width, int startPosX, int startPosY) : base(height, width, startPosX, startPosY)
+        
+        public City(int ammountOfCitizen, int ammountOfThiefs, int ammountOfCops, int height, int width, int startPosX, int startPosY) : base(height, width, startPosX, startPosY)
         {
             News = new List<string>();
-            CreatePeople(Peoples, ammountOfCitizen, ammountOfTheifs, ammountOfCops);
+            Prison = new List<int> { 32, 20, 1, 22 };
+            CreatePeople(Peoples, ammountOfCitizen, ammountOfThiefs, ammountOfCops);
             // InitCityGrid();
 
         }
@@ -72,19 +74,24 @@ namespace CopsAndRobbers
                     NewNews = true;
                 }
                 
-                if(indexList.Count() > 0) people.SetDirection();
+                if(indexList.Count() > 0) people.SetDirection(this);
                 indexList.Add(people.Id);
-                
+                // CityGrid[(people.PosX, people.PosY)].Add(people.Id);
+
                 //CityGrid.Add(people.PosX, people.PosY), 
-               
+
             }
             else
             {
                 CityGrid.Add((people.PosX, people.PosY), new List<int> { people.Id });
             }
+            if (people.MaxY > this.Height)
+            {
+                people.Interaction(people, this);
+            }
         }
 
-        private void CreatePeople(List<People> peoples, int ammountOfCitizen, int ammountOfTheifs, int ammountOfCops)
+        public void CreatePeople(List<People> peoples, int ammountOfCitizen, int ammountOfTheifs, int ammountOfCops)
         {
 
             for (int i = 0; i < ammountOfCitizen; i++)

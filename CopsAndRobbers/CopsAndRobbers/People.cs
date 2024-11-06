@@ -16,7 +16,9 @@ namespace CopsAndRobbers
         public int DirY { get; set; }
         public virtual List<Goods> Inventory { get; set; }
         public int MaxX { get; set; }
+        public int MinX { get; set; }
         public int MaxY { get; set; }
+        public int MinY { get; set; }
 
 
         public People(string name, int id, Location location)
@@ -24,17 +26,21 @@ namespace CopsAndRobbers
             Name = name;
             Id = id;
             SetPosition(location);
-            SetDirection();
+            SetDirection(location);
         }
         public void SetPosition(Location location)
         {
+            
             Random random = new Random();
             PosX = random.Next(1,location.Width);
             PosY = random.Next(1,location.Height);
             MaxX = location.Width;
+            MinX = location.StartPosX;
             MaxY = location.Height;
+            MinY = location.StartPosY;
+
         }
-        public void SetDirection()
+        public void SetDirection(Location location)
         {
             var directions = new List<(int, int)>
             {
@@ -55,15 +61,14 @@ namespace CopsAndRobbers
                 int newY = PosY + direction.Item2;
 
                 // Check if the target position is within grid bounds
-                if ((PosX + DirX != 0 || PosX + DirX != MaxX ||
-                      PosY + DirY != 0 || PosY + DirY != MaxY))
+                if ((PosX + DirX != MinX || PosX + DirX != MaxX ||
+                      PosY + DirY != MinY || PosY + DirY != MaxY))
                 {
                     newDirections.Add(direction);
                 }
             }
 
-            Random rand = new Random();
-            int rndDir = rand.Next(0, newDirections.Count());
+            int rndDir = Random.Shared.Next(0, newDirections.Count());
 
             DirX = newDirections.ElementAt(rndDir).Item1;
             DirY = newDirections.ElementAt(rndDir).Item2;
@@ -71,11 +76,11 @@ namespace CopsAndRobbers
         public void Move(Location location)
         {
             
-            if (PosX + DirX == 0 || PosX + DirX == MaxX ||
-                PosY + DirY == 0 || PosY + DirY == MaxY )
+            if (PosX + DirX == MinX || PosX + DirX == MaxX ||
+                PosY + DirY == MinY || PosY + DirY == MaxY )
             {
                 location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
-                SetDirection();
+                SetDirection(location);
             }
             else
             {
@@ -129,6 +134,8 @@ namespace CopsAndRobbers
     class Robber : People
     {
         private List<Goods> Loot;
+
+        public int PrisonTime { get; set; }
         public override List<Goods> Inventory { get => this.Loot; set => this.Loot = value; }
         public Robber(string name, int id, Location location) : base(name, id, location)
         {
@@ -141,13 +148,59 @@ namespace CopsAndRobbers
                 StealFrom(people);
                 location.News.Add($"{this.Name} stal {this.Inventory.Last().ItemName} från {people.Name}.                ");
             }
-            else if (people is Cop)
+            else if (people is Cop && this.Inventory.Count() > 0)
             {
-                people.Interaction(this, location);
+                //people.Interaction(this, location);
+                PrisonTime = this.Inventory.Count() * 10;
+                this.SeizedFrom(people);
+                Console.SetCursorPosition(PosX, PosY);
+                Console.Write(" ");
+                location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
+                MaxX = location.Prison[1];
+                MaxY = location.Prison[0];
+                MinX = location.Prison[2];
+                MinY = location.Prison[3];
+                PosX = Random.Shared.Next(MinX + 1, MaxX);
+                PosY = Random.Shared.Next(MinY + 1, MaxY);
+
+                if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
+                {
+                    indexList.Add(this.Id);
+                }
+                else
+                {
+                    location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
+                }
+                    
+
+            }
+            else if (PrisonTime > 0)
+            {
+
             }
             else
             {
                 base.Interaction(people, location);
+            }
+            if (this == people && PrisonTime > 0)
+            {
+                PrisonTime -= 1;
+                if (PrisonTime == 0)
+                {
+                    Console.SetCursorPosition(PosX, PosY);
+                    Console.Write(" ");
+                    location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
+                    this.SetPosition(location); 
+
+                    if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
+                    {
+                        indexList.Add(this.Id);
+                    }
+                    else
+                    {
+                        location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
+                    }
+                }
             }
         }
         private void StealFrom(People people)
@@ -156,6 +209,16 @@ namespace CopsAndRobbers
             int atIndex = rnd.Next(0, people.Inventory.Count());
             Inventory.Add(people.Inventory[atIndex]);
             people.Inventory.RemoveAt(atIndex);
+        }
+        private void SeizedFrom(People people)
+        {
+            for (int i = 0; i < this.Inventory.Count(); i++)
+            {
+                people.Inventory.Add(this.Inventory[i]);
+                PrisonTime += 10;
+            }
+            this.Inventory.Clear();
+
         }
     }
 
@@ -171,7 +234,8 @@ namespace CopsAndRobbers
         {
             if (people is Robber && people.Inventory.Count() > 0)
             {
-                this.SeizedFrom(people);
+                //this.SeizedFrom(people);
+                people.Interaction(this, location);
                 location.News.Add($"{this.Name} beslagtog {this.Inventory.Count()} stöldgods från {people.Name}.                  ");
             }
             else
@@ -179,15 +243,16 @@ namespace CopsAndRobbers
                 base.Interaction(people, location);
             }
         }
-        private void SeizedFrom(People people)
-        {
-            for (int i = 0; i < people.Inventory.Count(); i++)
-            {
-                Inventory.Add(people.Inventory[i]);
-            }
-            people.Inventory.Clear();
+        //private void SeizedFrom(People people)
+        //{
+        //    for (int i = 0; i < people.Inventory.Count(); i++)
+        //    {
+        //        Inventory.Add(people.Inventory[i]);
+                
+        //    }
+        //    people.Inventory.Clear();
 
-        }
+        //}
 
     }
 

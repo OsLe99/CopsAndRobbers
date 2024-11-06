@@ -19,7 +19,7 @@ namespace CopsAndRobbers
 
                 }
                 location.NewNews = false;
-                //Thread.Sleep(1000);
+                //Thread.Sleep(200);
             }
             
         }
