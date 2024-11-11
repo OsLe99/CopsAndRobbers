@@ -32,15 +32,18 @@ namespace CopsAndRobbers
     }
     class City: Location
     {
-        public int AmmountOfCitizen { get; }
-        public int AmmountOfThiefs { get; }
-        public int AmmountOfCops { get; }
+        public int AmmountOfCitizen { get; set; }
+        public int AmmountOfThiefs { get; set; }
+        public int AmmountOfCops { get; set; }
         
         
         public City(int ammountOfCitizen, int ammountOfThiefs, int ammountOfCops, int height, int width, int startPosX, int startPosY) : base(height, width, startPosX, startPosY)
         {
             News = new List<string>();
             Prison = new List<int> { 32, 20, 1, 22 };
+            AmmountOfCitizen = ammountOfCitizen;
+            AmmountOfCops = ammountOfCops;
+            AmmountOfThiefs = ammountOfThiefs;
             CreatePeople(Peoples, ammountOfCitizen, ammountOfThiefs, ammountOfCops);
             // InitCityGrid();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +22,8 @@ namespace CopsAndRobbers
                 location.NewNews = false;
                 //Thread.Sleep(200);
             }
-            
         }
+
         public static void DisplayPeople(People person)
         {
             Console.SetCursorPosition(person.PosX, person.PosY);
@@ -62,6 +63,26 @@ namespace CopsAndRobbers
                 }
                 Console.WriteLine();
             }
+        }
+
+        public static void DisplayStatus(City city, int position)
+        {
+            int jailed = 0;
+            foreach (var robber in city.Peoples)
+            {
+                if (robber is Robber)
+                {
+                    if ((robber as Robber).PrisonTime > 0)
+                    {
+                        jailed--;
+                    }
+                }
+            }
+            Console.SetCursorPosition(0, position);
+
+            Console.WriteLine($"Av {city.AmmountOfCitizen} medborgare är {city.AmmountOfCitizen} medborgare kvar.\n" +
+                $"Av {city.AmmountOfCops} poliser är {city.AmmountOfCops} poliser kvar.\n" + 
+                $"Av {city.AmmountOfThiefs} tjuvar är {city.AmmountOfThiefs + jailed} kvar.");
         }
     }
 }

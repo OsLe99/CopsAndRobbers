@@ -147,6 +147,7 @@ namespace CopsAndRobbers
             {
                 StealFrom(people);
                 location.News.Add($"{this.Name} stal {this.Inventory.Last().ItemName} från {people.Name}.                ");
+                Thread.Sleep(500);
             }
             else if (people is Cop && this.Inventory.Count() > 0)
             {
@@ -162,6 +163,8 @@ namespace CopsAndRobbers
                 MinY = location.Prison[3];
                 PosX = Random.Shared.Next(MinX + 1, MaxX);
                 PosY = Random.Shared.Next(MinY + 1, MaxY);
+                Render.DisplayStatus((location as City), 34);
+                Thread.Sleep(500);
 
                 if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
                 {
@@ -190,7 +193,8 @@ namespace CopsAndRobbers
                     Console.SetCursorPosition(PosX, PosY);
                     Console.Write(" ");
                     location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
-                    this.SetPosition(location); 
+                    this.SetPosition(location);
+                    Render.DisplayStatus((location as City), 34);
 
                     if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
                     {
