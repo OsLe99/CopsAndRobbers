@@ -89,13 +89,12 @@ namespace CopsAndRobbers
                 location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
                 PosY += DirY;
                 PosX += DirX;
-
             }
-            
         }
+
         public virtual void Interaction(People people, Location location)
         {
-            location.News.Add($"{this.Name} hälsar på {people.Name}.                ");
+            location.News.Add($"{this.Name} hälsar på {people.Name}.                                    ");
         }
     } 
 
@@ -146,7 +145,7 @@ namespace CopsAndRobbers
             if (people is Citizen && people.Inventory.Count() > 0)
             {
                 StealFrom(people);
-                location.News.Add($"{this.Name} stal {this.Inventory.Last().ItemName} från {people.Name}.                ");
+                location.News.Add($"Tjuven {this.Name} stal {this.Inventory.Last().ItemName} från medborgaren {people.Name}.                ");
                 Thread.Sleep(500);
             }
             else if (people is Cop && this.Inventory.Count() > 0)
@@ -240,7 +239,7 @@ namespace CopsAndRobbers
             {
                 //this.SeizedFrom(people);
                 people.Interaction(this, location);
-                location.News.Add($"{this.Name} beslagtog {this.Inventory.Count()} stöldgods från {people.Name}.                  ");
+                location.News.Add($"Polisen {this.Name} beslagtog {this.Inventory.Count()} stöldgods från tjuven {people.Name}.                  ");
             }
             else
             {

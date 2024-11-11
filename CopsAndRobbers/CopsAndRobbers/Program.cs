@@ -13,8 +13,8 @@
             //Ritar upp de visuella i konsollen från objekten
             Render.DisplayLocation(city);
             Render.DisplayLocation(prison);
-            city.InitCityGrid();
             Render.DisplayStatus(city, 34);
+            city.InitCityGrid();
 
             while (true)
             {
