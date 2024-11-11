@@ -149,31 +149,7 @@ namespace CopsAndRobbers
             }
             else if (people is Cop && this.Inventory.Count() > 0)
             {
-                //people.Interaction(this, location);
-                PrisonTime = this.Inventory.Count() * 10;
-                this.SeizedFrom(people);
-                Console.SetCursorPosition(PosX, PosY);
-                Console.Write(" ");
-                location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
-                MaxX = location.Prison[1];
-                MaxY = location.Prison[0];
-                MinX = location.Prison[2];
-                MinY = location.Prison[3];
-                PosX = Random.Shared.Next(MinX + 1, MaxX);
-                PosY = Random.Shared.Next(MinY + 1, MaxY);
-                Render.DisplayStatus((location as City), 34);
-                Thread.Sleep(500);
-
-                if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
-                {
-                    indexList.Add(this.Id);
-                }
-                else
-                {
-                    location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
-                }
-                    
-
+                people.Interaction(this, location);
             }
             else if (PrisonTime > 0)
             {
@@ -186,23 +162,7 @@ namespace CopsAndRobbers
             if (this == people && PrisonTime > 0)
             {
                 PrisonTime -= 1;
-                if (PrisonTime == 0)
-                {
-                    Console.SetCursorPosition(PosX, PosY);
-                    Console.Write(" ");
-                    location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
-                    this.SetPosition(location);
-                    Render.DisplayStatus((location as City), 34);
-
-                    if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
-                    {
-                        indexList.Add(this.Id);
-                    }
-                    else
-                    {
-                        location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
-                    }
-                }
+                this.ReturnFromPrison(location);
             }
         }
         private void StealFrom(People people)
@@ -212,15 +172,26 @@ namespace CopsAndRobbers
             Inventory.Add(people.Inventory[atIndex]);
             people.Inventory.RemoveAt(atIndex);
         }
-        private void SeizedFrom(People people)
-        {
-            for (int i = 0; i < this.Inventory.Count(); i++)
-            {
-                people.Inventory.Add(this.Inventory[i]);
-                PrisonTime += 10;
-            }
-            this.Inventory.Clear();
 
+        private void ReturnFromPrison(Location location)
+        {
+            if (PrisonTime == 0)
+            {
+                Console.SetCursorPosition(PosX, PosY);
+                Console.Write(" ");
+                location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
+                this.SetPosition(location);
+                Render.DisplayStatus((location as City), 34);
+
+                if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
+                {
+                    indexList.Add(this.Id);
+                }
+                else
+                {
+                    location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
+                }
+            }
         }
     }
 
@@ -237,8 +208,12 @@ namespace CopsAndRobbers
             if (people is Robber && people.Inventory.Count() > 0)
             {
                 //this.SeizedFrom(people);
-                people.Interaction(this, location);
+                (people as Robber).PrisonTime = people.Inventory.Count() * 10;
+                this.SeizedFrom(people);
+                this.SendToPrison(location, people);
+                //people.Interaction(this, location);
                 location.News.Add($"Polisen {this.Name} beslagtog {this.Inventory.Count()} stöldgods från tjuven {people.Name}.                  ");
+                Thread.Sleep(500);
             }
             else if (people is Citizen)
             {
@@ -270,17 +245,39 @@ namespace CopsAndRobbers
                 base.Interaction(people, location);
             }
         }
-        //private void SeizedFrom(People people)
-        //{
-        //    for (int i = 0; i < people.Inventory.Count(); i++)
-        //    {
-        //        Inventory.Add(people.Inventory[i]);
-                
-        //    }
-        //    people.Inventory.Clear();
+        private void SeizedFrom(People people)
+        {
+            for (int i = 0; i < people.Inventory.Count(); i++)
+            {
+                Inventory.Add(people.Inventory[i]);
 
-        //}
+            }
+            people.Inventory.Clear();
 
+        }
+
+        private void SendToPrison(Location location, People people)
+        {
+            Console.SetCursorPosition(PosX, PosY);
+            Console.Write(" ");
+            location.CityGrid[(people.PosX, people.PosY)].Remove(people.Id);
+            people.MaxX = location.Prison[1];
+            people.MaxY = location.Prison[0];
+            people.MinX = location.Prison[2];
+            people.MinY = location.Prison[3];
+            people.PosX = Random.Shared.Next(people.MinX + 1, people.MaxX);
+            people.PosY = Random.Shared.Next(people.MinY + 1, people.MaxY);
+            Render.DisplayStatus((location as City), 34);
+
+            if (location.CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList))
+            {
+                indexList.Add(people.Id);
+            }
+            else
+            {
+                location.CityGrid.Add((people.PosX, people.PosY), new List<int> { people.Id });
+            }
+        }
     }
 
 }

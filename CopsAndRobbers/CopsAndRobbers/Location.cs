@@ -45,8 +45,6 @@ namespace CopsAndRobbers
             AmmountOfCops = ammountOfCops;
             AmmountOfThiefs = ammountOfThiefs;
             CreatePeople(Peoples, ammountOfCitizen, ammountOfThiefs, ammountOfCops);
-            // InitCityGrid();
-
         }
         public void InitCityGrid()
         {
@@ -54,9 +52,7 @@ namespace CopsAndRobbers
             {
                 if (CityGrid.TryGetValue((Peoples[i].PosX, Peoples[i].PosY), out List<int> indexList))  //Bryta ut till egen metod... Fixat
                 {
-
                     indexList.Add(Peoples[i].Id);
-
                 }
                 else
                 {
@@ -69,20 +65,16 @@ namespace CopsAndRobbers
         public void UpdateCityGrid(People people)
         {
             
-            if (CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList))  //Bryta ut till egen metod... Fixat
+            if (CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList))
             {
                 for (int i = 0; i < indexList.Count(); i++)
                 {
-                    people.Interaction(Peoples[indexList[i]], this); // Skapa interaction
+                    people.Interaction(Peoples[indexList[i]], this);
                     NewNews = true;
                 }
                 
                 if(indexList.Count() > 0) people.SetDirection(this);
                 indexList.Add(people.Id);
-                // CityGrid[(people.PosX, people.PosY)].Add(people.Id);
-
-                //CityGrid.Add(people.PosX, people.PosY), 
-
             }
             else
             {
@@ -96,40 +88,19 @@ namespace CopsAndRobbers
 
         public void CreatePeople(List<People> peoples, int ammountOfCitizen, int ammountOfTheifs, int ammountOfCops)
         {
-            string[] names = new string[]
-            {
-                "Alice", "Arvid", "Axel", "Beatrice", "Benjamin", "Björn", "Camilla", "Carl", "Caroline", "David",
-                "Daniel", "Diana", "Elin", "Elias", "Emma", "Emil", "Eva", "Filip", "Fredrik", "Gabriel",
-                "Hanna", "Henrik", "Ida", "Isak", "Jacob", "Johanna", "Johan", "Julia", "Karin", "Kasper",
-                "Klara", "Kristina", "Leo", "Lina", "Linus", "Louise", "Lucas", "Ludvig", "Maja", "Malin",
-                "Marcus", "Maria", "Martin", "Matilda", "Max", "Mia", "Mikael", "Moa", "Nina", "Noah",
-                "Olle", "Oscar", "Patrik", "Peter", "Rebecka", "Robin", "Ronja", "Samuel", "Sandra", "Sebastian",
-                "Simon", "Sofia", "Sofie", "Stina", "Susanna", "Theodor", "Therese", "Thomas", "Tina", "Tommy",
-                "Ulrika", "Viktor", "Wilma", "Ylva", "Alexander", "Amanda", "Anders", "Anna", "Anton", "Astrid",
-                "Birgitta", "Bo", "Carina", "Christoffer", "Ella", "Erik", "Frida", "Gustav", "Helen", "Håkan",
-                "Jan", "Jessica", "Jonas", "Lars", "Malte", "Monica", "Nils", "Per", "Rickard", "Stefan"
-            };
 
             for (int i = 0; i < ammountOfCitizen; i++)
             {
-                peoples.Add(new Citizen($"{names[Random.Shared.Next(0, 100)]}", peoples.Count(), this));
+                peoples.Add(new Citizen($"{Helpers.GetName()}", peoples.Count(), this));
             }
             for (int i = 0; i < ammountOfTheifs; i++)
             {
-                peoples.Add(new Robber($"{names[Random.Shared.Next(0, 100)]}", peoples.Count(), this));
+                peoples.Add(new Robber($"{Helpers.GetName()}", peoples.Count(), this));
             }
             for (int i = 0; i < ammountOfCops; i++)
             {
-                peoples.Add(new Cop($"{names[Random.Shared.Next(0, 100)]}", peoples.Count(), this));
+                peoples.Add(new Cop($"{Helpers.GetName()}", peoples.Count(), this));
             }
-        }
-
-    }
-    class Prison: Location
-    {
-        public Prison(int height, int width, int startPosX, int startPosY) : base (height, width, startPosX, startPosY)
-        {
-            
         }
     }
 }

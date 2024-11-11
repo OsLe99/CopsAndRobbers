@@ -6,13 +6,11 @@
         {
             Console.CursorVisible = false;
             
-            // Instansierat subklass okbjekten city och prison
+            // Instansierat subklass okbjekten city
             City city = new City(20, 10, 5, 20, 80, 0, 0);
-            Prison prison = new Prison(10, 20, 0, 22);
 
             //Ritar upp de visuella i konsollen från objekten
             Render.DisplayLocation(city);
-            Render.DisplayLocation(prison);
             Render.DisplayStatus(city, 34);
             city.InitCityGrid();
 

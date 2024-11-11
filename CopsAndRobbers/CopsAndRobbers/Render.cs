@@ -63,6 +63,25 @@ namespace CopsAndRobbers
                 }
                 Console.WriteLine();
             }
+
+            for (int col = 22; col <= (22 + 10); col++)
+            {
+                Console.SetCursorPosition(0, col);
+                for (int row = 0; row <= (20); row++)
+                {
+
+                    if (col == 22 || col == (22 + 10) || row == 0 || row == 20)
+                    {
+                        Console.Write("X");
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+                }
+                Console.WriteLine();
+            }
+
         }
 
         public static void DisplayStatus(City city, int position)
