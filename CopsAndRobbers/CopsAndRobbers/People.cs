@@ -144,6 +144,7 @@ namespace CopsAndRobbers
             if (people is Citizen && people.Inventory.Count() > 0)
             {
                 StealFrom(people);
+                Render.DisplayStatus((location as City), 34);
                 location.News.Add($"Tjuven {this.Name} stal {this.Inventory.Last().ItemName} från medborgaren {people.Name}.                ");
                 Thread.Sleep(500);
             }
@@ -162,7 +163,10 @@ namespace CopsAndRobbers
             if (this == people && PrisonTime > 0)
             {
                 PrisonTime -= 1;
-                this.ReturnFromPrison(location);
+                if (PrisonTime == 0)
+                {
+                    this.ReturnFromPrison(location);
+                }   
             }
         }
         private void StealFrom(People people)
@@ -175,9 +179,7 @@ namespace CopsAndRobbers
 
         private void ReturnFromPrison(Location location)
         {
-            if (PrisonTime == 0)
-            {
-                Console.SetCursorPosition(PosX, PosY);
+                Console.SetCursorPosition(this.PosX, this.PosY);
                 Console.Write(" ");
                 location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
                 this.SetPosition(location);
@@ -191,7 +193,6 @@ namespace CopsAndRobbers
                 {
                     location.CityGrid.Add((this.PosX, this.PosY), new List<int> { this.Id });
                 }
-            }
         }
     }
 
@@ -258,7 +259,7 @@ namespace CopsAndRobbers
 
         private void SendToPrison(Location location, People people)
         {
-            Console.SetCursorPosition(PosX, PosY);
+            Console.SetCursorPosition(people.PosX, people.PosY);
             Console.Write(" ");
             location.CityGrid[(people.PosX, people.PosY)].Remove(people.Id);
             people.MaxX = location.Prison[1];

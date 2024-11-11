@@ -87,19 +87,28 @@ namespace CopsAndRobbers
         public static void DisplayStatus(City city, int position)
         {
             int jailed = 0;
-            foreach (var robber in city.Peoples)
+            int hasBeenRobbed = 0;
+            foreach (var person in city.Peoples)
             {
-                if (robber is Robber)
+                if (person is Robber)
                 {
-                    if ((robber as Robber).PrisonTime > 0)
+                    if ((person as Robber).PrisonTime > 0)
                     {
                         jailed--;
                     }
                 }
+                else if (person is Citizen)
+                {
+                    if ((person as Citizen).Inventory.Count() == 0)
+                    {
+                        hasBeenRobbed++;
+                    }
+                }
             }
+
             Console.SetCursorPosition(0, position);
 
-            Console.WriteLine($"Av {city.AmmountOfCitizen} medborgare är {city.AmmountOfCitizen} medborgare kvar.\n" +
+            Console.WriteLine($"Av {city.AmmountOfCitizen} medborgare har {hasBeenRobbed} medborgare blivit rånade på allt de äger.\n" +
                 $"Av {city.AmmountOfCops} poliser är {city.AmmountOfCops} poliser kvar.\n" + 
                 $"Av {city.AmmountOfThiefs} tjuvar är {city.AmmountOfThiefs + jailed} kvar.");
         }
