@@ -94,7 +94,7 @@ namespace CopsAndRobbers
 
         public virtual void Interaction(People people, Location location)
         {
-            location.News.Add($"{this.Name} hälsar på {people.Name}.                                    ");
+            location.News.Add($"{this.Name} hälsar på {people.Name}.                                                     ");
         }
     } 
 
@@ -112,17 +112,16 @@ namespace CopsAndRobbers
 
         private void CreateGoods(List<Goods> goods)
         {
-            goods.Add(new ("keys"));
-            goods.Add(new ("phone"));
-            goods.Add(new ("dosh"));
-            goods.Add(new ("watch"));
+            goods.Add(new ("keys", this.Id));
+            goods.Add(new ("phone", this.Id));
+            goods.Add(new ("dosh", this.Id));
+            goods.Add(new ("watch", this.Id));
         }
         public override void Interaction(People people, Location location)
         {
-            if (people is Robber)
+            if (people is Robber || people is Cop)
             {
                 people.Interaction(this, location);
-                
             }
             else
             {
@@ -240,6 +239,31 @@ namespace CopsAndRobbers
                 //this.SeizedFrom(people);
                 people.Interaction(this, location);
                 location.News.Add($"Polisen {this.Name} beslagtog {this.Inventory.Count()} stöldgods från tjuven {people.Name}.                  ");
+            }
+            else if (people is Citizen)
+            {
+                if (SeizedGoods.Find(p => p.OriginalOwnerId == people.Id) != null)
+                {
+                    List<Goods> tempGoods = new List<Goods>();
+                    foreach (Goods goods in SeizedGoods)
+                    {
+                        if (goods.OriginalOwnerId == people.Id)
+                        {
+                            tempGoods.Add(goods);
+                        }
+                    }
+                    foreach (Goods goods in tempGoods)
+                    {
+                        people.Inventory.Add(goods);
+                        SeizedGoods.Remove(goods);
+                    }
+                    location.News.Add($"Polisen {this.Name} lämnade tillbaks {tempGoods.Count()} ägodelar till {people.Name}.                  ");
+                    Thread.Sleep(500);
+                }
+                else
+                {
+                    base.Interaction(people, location);
+                }
             }
             else
             {
