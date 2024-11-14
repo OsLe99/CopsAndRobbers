@@ -44,14 +44,14 @@ namespace CopsAndRobbers
         {
             var directions = new List<(int, int)>
             {
-            { (0, 1) },    // Up
-            { (0, -1) },   // Down
-            { (1, 0) },    // Right
-            { (-1, 0) },   // Left
-            { (1, 1) },    // Up-right
-            { (-1, 1) },   // Up-left
-            { (1, -1) },   // Down-right
-            { (-1, -1) }   // Down-left
+            { (0, 1) },    // Upp
+            { (0, -1) },   // Ner
+            { (1, 0) },    // Höger
+            { (-1, 0) },   // Vänster
+            { (1, 1) },    // Höger upp
+            { (-1, 1) },   // Vänster upp
+            { (1, -1) },   // Höger ner
+            { (-1, -1) }   // Vänster ner
             };
             var newDirections = new List<(int, int)>();
 
@@ -60,7 +60,7 @@ namespace CopsAndRobbers
                 int newX = PosX + direction.Item1;
                 int newY = PosY + direction.Item2;
 
-                // Check if the target position is within grid bounds
+                // Kollar ifall target position är innanför grid bounds
                 if ((PosX + DirX != MinX || PosX + DirX != MaxX ||
                       PosY + DirY != MinY || PosY + DirY != MaxY))
                 {
@@ -144,7 +144,7 @@ namespace CopsAndRobbers
             if (people is Citizen && people.Inventory.Count() > 0)
             {
                 StealFrom(people);
-                Render.DisplayStatus((location as City), 34);
+                Render.DisplayStatus((location as City));
                 location.News.Add($"Tjuven {this.Name} stal {this.Inventory.Last().ItemName} från medborgaren {people.Name}.                ");
                 Thread.Sleep(500);
             }
@@ -183,7 +183,7 @@ namespace CopsAndRobbers
                 Console.Write(" ");
                 location.CityGrid[(this.PosX, this.PosY)].Remove(this.Id);
                 this.SetPosition(location);
-                Render.DisplayStatus((location as City), 34);
+                Render.DisplayStatus((location as City));
 
                 if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
                 {
@@ -268,7 +268,7 @@ namespace CopsAndRobbers
             people.MinY = location.Prison[3];
             people.PosX = Random.Shared.Next(people.MinX + 1, people.MaxX);
             people.PosY = Random.Shared.Next(people.MinY + 1, people.MaxY);
-            Render.DisplayStatus((location as City), 34);
+            Render.DisplayStatus((location as City));
 
             if (location.CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList))
             {

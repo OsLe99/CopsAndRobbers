@@ -44,7 +44,7 @@ namespace CopsAndRobbers
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public static void DisplayLocation(Location location) // Draws city border
+        public static void DisplayLocation(Location location) // Ritar väggarna för staden
         {
             for (int col = location.StartPosY; col <= (location.StartPosY + location.Height); col++)
             {
@@ -64,13 +64,13 @@ namespace CopsAndRobbers
                 Console.WriteLine();
             }
 
-            for (int col = 22; col <= (22 + 10); col++)
+            for (int col = (location.Height + 2); col <= ((location.Height + 2) + 10); col++)
             {
                 Console.SetCursorPosition(0, col);
                 for (int row = 0; row <= (20); row++)
                 {
 
-                    if (col == 22 || col == (22 + 10) || row == 0 || row == 20)
+                    if (col == (location.Height + 2) || col == ((location.Height + 2) + 10) || row == 0 || row == 20)
                     {
                         Console.Write("X");
                     }
@@ -84,8 +84,9 @@ namespace CopsAndRobbers
 
         }
 
-        public static void DisplayStatus(City city, int position)
+        public static void DisplayStatus(City city)
         {
+            int position = (city.Prison[0] + 2);
             int jailed = 0;
             int hasBeenRobbed = 0;
             foreach (var person in city.Peoples)

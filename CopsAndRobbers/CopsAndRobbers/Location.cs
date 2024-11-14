@@ -40,7 +40,7 @@ namespace CopsAndRobbers
         public City(int ammountOfCitizen, int ammountOfThiefs, int ammountOfCops, int height, int width, int startPosX, int startPosY) : base(height, width, startPosX, startPosY)
         {
             News = new List<string>();
-            Prison = new List<int> { 32, 20, 1, 22 };
+            Prison = new List<int> { (Height + 12), 20, 1, (Height + 2) };
             AmmountOfCitizen = ammountOfCitizen;
             AmmountOfCops = ammountOfCops;
             AmmountOfThiefs = ammountOfThiefs;
