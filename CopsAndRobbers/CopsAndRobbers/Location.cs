@@ -65,7 +65,7 @@ namespace CopsAndRobbers
         public void UpdateCityGrid(People people)
         {
             
-            if (CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList))
+            if (CityGrid.TryGetValue((people.PosX, people.PosY), out List<int> indexList)) // Kollar ifall någon finns på samma position
             {
                 for (int i = 0; i < indexList.Count(); i++)
                 {
@@ -73,14 +73,14 @@ namespace CopsAndRobbers
                     NewNews = true;
                 }
                 
-                if(indexList.Count() > 0) people.SetDirection(this);
+                if(indexList.Count() > 0) people.SetDirection(this); // Ändrar direction efter interaction
                 indexList.Add(people.Id);
             }
             else
             {
-                CityGrid.Add((people.PosX, people.PosY), new List<int> { people.Id });
+                CityGrid.Add((people.PosX, people.PosY), new List<int> { people.Id }); // Lägger till nuvarande person i en ny lista på sin x & y pos
             }
-            if (people.MaxY > this.Height)
+            if (people.MaxY > this.Height) // Kallar på prison interaction
             {
                 people.Interaction(people, this);
             }
