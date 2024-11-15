@@ -7,7 +7,7 @@
             Console.CursorVisible = false;
             
             // Instansierat subklass okbjektet city
-            City city = new City(20, 10, 5, 20, 80, 0, 0);
+            City city = new City(20, 10, 5, 20, 100, 0, 0);
 
             // Ritar upp det visuella i konsollen från objekten
             Render.DisplayLocation(city);
@@ -25,7 +25,7 @@
                     city.UpdateCityGrid(people);
                     Render.NewsFeed(city, (city.Prison[0] + 6));
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(50);
             }
         }
     }

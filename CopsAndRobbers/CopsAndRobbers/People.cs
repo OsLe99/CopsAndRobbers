@@ -146,7 +146,7 @@ namespace CopsAndRobbers
                 StealFrom(people);
                 Render.DisplayStatus((location as City));
                 location.News.Add($"Tjuven {this.Name} stal {this.Inventory.Last().ItemName} från medborgaren {people.Name}.                ");
-                Thread.Sleep(500);
+                Thread.Sleep(300);
             }
             else if (people is Cop && this.Inventory.Count() > 0)
             {
@@ -208,13 +208,11 @@ namespace CopsAndRobbers
         {
             if (people is Robber && people.Inventory.Count() > 0)
             {
-                //this.SeizedFrom(people);
                 (people as Robber).PrisonTime = people.Inventory.Count() * 10;
                 this.SeizedFrom(people);
                 this.SendToPrison(location, people);
-                //people.Interaction(this, location);
                 location.News.Add($"Polisen {this.Name} beslagtog {this.Inventory.Count()} stöldgods från tjuven {people.Name}.                  ");
-                Thread.Sleep(500);
+                Thread.Sleep(300);
             }
             else if (people is Citizen)
             {
@@ -234,7 +232,7 @@ namespace CopsAndRobbers
                         SeizedGoods.Remove(goods);
                     }
                     location.News.Add($"Polisen {this.Name} lämnade tillbaks {tempGoods.Count()} ägodelar till {people.Name}.                  ");
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                 }
                 else
                 {
