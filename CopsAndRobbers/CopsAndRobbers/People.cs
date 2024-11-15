@@ -152,7 +152,7 @@ namespace CopsAndRobbers
             {
                 people.Interaction(this, location);
             }
-            else if (PrisonTime > 0)
+            else if (PrisonTime > 0) // Ifall en tjuv har prison time skippar denna check base.Interaction()
             {
 
             }
@@ -185,7 +185,7 @@ namespace CopsAndRobbers
                 this.SetPosition(location);
                 Render.DisplayStatus((location as City));
 
-                if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList))
+                if (location.CityGrid.TryGetValue((this.PosX, this.PosY), out List<int> indexList)) // Lägger till i lista eller skapa lista för CityGrid
                 {
                     indexList.Add(this.Id);
                 }
@@ -218,17 +218,17 @@ namespace CopsAndRobbers
             }
             else if (people is Citizen)
             {
-                if (SeizedGoods.Find(p => p.OriginalOwnerId == people.Id) != null)
+                if (SeizedGoods.Find(p => p.OriginalOwnerId == people.Id) != null) // Check för att se om item har samma Id som medborgaren har
                 {
                     List<Goods> tempGoods = new List<Goods>();
                     foreach (Goods goods in SeizedGoods)
                     {
-                        if (goods.OriginalOwnerId == people.Id)
+                        if (goods.OriginalOwnerId == people.Id) // Temp-lista fylls med alla items med samma Id som medborgare
                         {
                             tempGoods.Add(goods);
                         }
                     }
-                    foreach (Goods goods in tempGoods)
+                    foreach (Goods goods in tempGoods) // Lägger till alla items till medborgaren, tar bort items med samma Id från polis
                     {
                         people.Inventory.Add(goods);
                         SeizedGoods.Remove(goods);
@@ -262,7 +262,7 @@ namespace CopsAndRobbers
             Console.SetCursorPosition(people.PosX, people.PosY);
             Console.Write(" ");
             location.CityGrid[(people.PosX, people.PosY)].Remove(people.Id);
-            people.MaxX = location.Prison[1];
+            people.MaxX = location.Prison[1]; // Sätter nya bounds för tjuv som är påväg till fängelse
             people.MaxY = location.Prison[0];
             people.MinX = location.Prison[2];
             people.MinY = location.Prison[3];

@@ -6,7 +6,7 @@
         {
             Console.CursorVisible = false;
             
-            // Instansierat subklass okbjekten city
+            // Instansierat subklass okbjektet city
             City city = new City(20, 10, 5, 20, 80, 0, 0);
 
             // Ritar upp det visuella i konsollen från objekten

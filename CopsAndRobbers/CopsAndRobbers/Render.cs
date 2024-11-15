@@ -11,20 +11,18 @@ namespace CopsAndRobbers
     {
         public static void NewsFeed(Location location, int position)
         {
-            if(location.NewNews == true)
+            if(location.NewNews == true) // Kollar ifall någon ny interaction har hänt
             {
                 for (int i = 0; i < (location.News.Count() < 5 ? location.News.Count() : 5); i++)
                 {
                     Console.SetCursorPosition(0, (position + i));
                     Console.WriteLine($"{location.News.Count() - 1 - i}. {location.News.ElementAt(location.News.Count() - i - 1)}");
-
                 }
                 location.NewNews = false;
-                //Thread.Sleep(200);
             }
         }
 
-        public static void DisplayPeople(People person)
+        public static void DisplayPeople(People person) // Ritar upp individuellt person
         {
             Console.SetCursorPosition(person.PosX, person.PosY);
             if (person is Citizen)
@@ -44,7 +42,7 @@ namespace CopsAndRobbers
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public static void DisplayLocation(Location location) // Ritar väggarna för staden
+        public static void DisplayLocation(Location location) // Ritar upp city och prison
         {
             for (int col = location.StartPosY; col <= (location.StartPosY + location.Height); col++)
             {
@@ -91,14 +89,14 @@ namespace CopsAndRobbers
             int hasBeenRobbed = 0;
             foreach (var person in city.Peoples)
             {
-                if (person is Robber)
+                if (person is Robber) // Ändrar status för att se hur många som är i prison
                 {
                     if ((person as Robber).PrisonTime > 0)
                     {
                         jailed--;
                     }
                 }
-                else if (person is Citizen)
+                else if (person is Citizen) // Ändrar status för medborgare som inte har några items
                 {
                     if ((person as Citizen).Inventory.Count() == 0)
                     {
@@ -111,7 +109,7 @@ namespace CopsAndRobbers
 
             Console.WriteLine($"Av {city.AmmountOfCitizen} medborgare har {hasBeenRobbed} medborgare blivit rånade på allt de äger.\n" +
                 $"Av {city.AmmountOfCops} poliser är {city.AmmountOfCops} poliser kvar.\n" + 
-                $"Av {city.AmmountOfThiefs} tjuvar är {city.AmmountOfThiefs + jailed} kvar.");
+                $"Av {city.AmmountOfThiefs} tjuvar är {city.AmmountOfThiefs + jailed} kvar.   ");
         }
     }
 }

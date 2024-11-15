@@ -48,9 +48,9 @@ namespace CopsAndRobbers
         }
         public void InitCityGrid()
         {
-            for (int i = 0; i < Peoples.Count(); i++)
+            for (int i = 0; i < Peoples.Count(); i++) // Initiera CityGrid dictionary och lägger till Peoples spawn positions
             {
-                if (CityGrid.TryGetValue((Peoples[i].PosX, Peoples[i].PosY), out List<int> indexList))  //Bryta ut till egen metod... Fixat
+                if (CityGrid.TryGetValue((Peoples[i].PosX, Peoples[i].PosY), out List<int> indexList))
                 {
                     indexList.Add(Peoples[i].Id);
                 }
